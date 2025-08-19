@@ -1,50 +1,67 @@
-# Welcome to your Expo app 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-## Get started
+# Invess Agriculture Fertilizer Stock Management App
 
-1. Install dependencies
+## Overview
+This project is a modern, mobile-first application for Invess Agriculture, designed to streamline fertilizer stock management, requests, approvals, warehouse operations, invoicing, reporting, and notifications. The app features a clean white/green/blue theme, company branding, and role-based access for different user types.
 
-   ```bash
-   npm install
-   ```
+## Key Features
 
-2. Start the app
+- **Role-Based Access:**
+	- Sales Agent: Create/view requests, see dashboard, receive notifications.
+	- Compliance Officer: Approve/reject requests, see dashboard, receive notifications.
+	- Warehouse Officer: Manage warehouse stock/movements, view invoices, receive notifications.
+	- Admin/Manager: Full access to all features, including reports.
 
-   ```bash
-   npx expo start
-   ```
+- **Dashboard:**
+	- Real-time stock levels for all warehouses
+	- Pending requests and alerts
 
-In the output, you'll find options to open the app in a
+- **Requests:**
+	- Create, view, and track fertilizer requests
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- **Approvals:**
+	- Approve or reject requests (Compliance/Admin roles)
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- **Warehouse Management:**
+	- View and update warehouse stock
+	- Track stock movements
 
-## Get a fresh project
+- **Invoices:**
+	- View and manage invoices related to fertilizer distribution
 
-When you're ready, run:
+- **Reports:**
+	- Generate and view operational and stock reports
 
-```bash
-npm run reset-project
-```
+- **Notifications:**
+	- Real-time notifications for actions, approvals, and alerts
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+- **Branding:**
+	- Invess logo and company name in all headers and login
+	- Consistent color palette and modern UI
 
-## Learn more
+## Technology Stack
+- React Native (Expo)
+- TypeScript
+- Redux Toolkit (state management)
+- NativeWind (utility-first styling)
+- Lucide Icons
+- Expo Router
 
-To learn more about developing your project with Expo, look at the following resources:
+## Architecture
+- `features/` — Modular feature folders for each major app section
+- `store/` — Redux Toolkit store and slices for global state
+- `constants/` — Color palette and app-wide constants
+- `assets/` — Company logo, images, and fonts
+- `app/tabs/` — Bottom tab navigation and header logic
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Roles & Permissions
+- Each user role sees only the features relevant to their responsibilities.
+- Admin/Manager has access to all features and reports.
 
-## Join the community
+## Branding
+- Company logo and name are visible on login and in the app header.
+- All screens use the Invess Agriculture color palette for a unified look.
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Contact
+For questions or support, contact the Invess Agriculture development team.
