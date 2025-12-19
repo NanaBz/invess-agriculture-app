@@ -1,9 +1,6 @@
 {
-  "buildCommand": "npx expo export --platform web",
+  "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "env": {
-    "EXPO_PUBLIC_API_URL": "https://invess-backend.onrender.com/api"
-  },
   "routes": [
     {
       "src": "/(.*)",
