@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import { Platform } from 'react-native';
 
 /**
  * API Client for fertilizer-stock-app backend.
@@ -8,6 +9,31 @@ import * as SecureStore from 'expo-secure-store';
 
 // Production backend URL
 const API_BASE_URL = 'https://invess-backend.onrender.com/api';
+
+// Storage helper for web vs native
+const storage = {
+  async setItem(key: string, value: string): Promise<void> {
+    if (Platform.OS === 'web') {
+      localStorage.setItem(key, value);
+    } else {
+      await SecureStore.setItemAsync(key, value);
+    }
+  },
+  async getItem(key: string): Promise<string | null> {
+    if (Platform.OS === 'web') {
+      return localStorage.getItem(key);
+    } else {
+      return await SecureStore.getItemAsync(key);
+    }
+  },
+  async removeItem(key: string): Promise<void> {
+    if (Platform.OS === 'web') {
+      localStorage.removeItem(key);
+    } else {
+      await SecureStore.deleteItemAsync(key);
+    }
+  },
+};
 
 interface AuthResponse {
   token: string;
@@ -61,11 +87,11 @@ class ApiClient {
   }
 
   /**
-   * Store JWT token in SecureStore.
+   * Store JWT token in SecureStore or localStorage.
    */
   private async setToken(token: string): Promise<void> {
     try {
-      await SecureStore.setItemAsync('authToken', token);
+      await storage.setItem('authToken', token);
       this.token = token;
     } catch (err) {
       console.error('Failed to store token:', err);
@@ -74,12 +100,12 @@ class ApiClient {
   }
 
   /**
-   * Retrieve JWT token from SecureStore or memory.
+   * Retrieve JWT token from SecureStore/localStorage or memory.
    */
   async getToken(): Promise<string | null> {
     if (this.token) return this.token;
     try {
-      const stored = await SecureStore.getItemAsync('authToken');
+      const stored = await storage.getItem('authToken');
       if (stored) {
         this.token = stored;
       }
@@ -95,7 +121,7 @@ class ApiClient {
    */
   async clearToken(): Promise<void> {
     try {
-      await SecureStore.deleteItemAsync('authToken');
+      await storage.removeItem('authToken');
       this.token = null;
     } catch (err) {
       console.error('Failed to clear token:', err);
