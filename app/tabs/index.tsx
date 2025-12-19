@@ -7,8 +7,9 @@ import WarehouseScreen from '../../features/warehouse';
 import InvoicesScreen from '../../features/invoices';
 import ReportsScreen from '../../features/reports';
 import NotificationsScreen from '../../features/notifications';
-import { LucideHome, LucideFileText, LucideCheckCircle, LucideWarehouse, LucideReceipt, LucideBarChart, LucideBell, LucideUser, LucideLogOut } from '../../components/Icon';
+import { LucideHome, LucideFileText, LucideCheckCircle, LucideWarehouse, LucideReceipt, LucideBarChart, LucideBell, LucideUser } from '../../components/Icon';
 import ProfileScreen from '../../features/profile/ProfileScreen';
+import UsersScreen from '../../features/profile/UsersScreen';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
@@ -46,6 +47,7 @@ const roleTabs: Record<string, { name: string; component: any; icon: any }[]> = 
     { name: 'Warehouse', component: WarehouseScreen, icon: LucideWarehouse },
     { name: 'Invoices', component: InvoicesScreen, icon: LucideReceipt },
     { name: 'Reports', component: ReportsScreen, icon: LucideBarChart },
+    { name: 'Users', component: UsersScreen, icon: LucideUser },
     { name: 'Notifications', component: NotificationsScreen, icon: LucideBell },
     { name: 'Profile', component: ProfileScreen, icon: LucideUser },
   ],

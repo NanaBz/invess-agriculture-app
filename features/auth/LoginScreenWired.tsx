@@ -13,13 +13,7 @@ import type { UserRole } from '../../store/userSlice';
 import { apiClient } from '../../services/api';
 import { setUser, setError } from '../../store/userSlice';
 import { getErrorMessage } from '../../utils/errorUtils';
-
-const roles = [
-  'Sales Agent',
-  'Compliance Officer',
-  'Warehouse Officer',
-  'Admin/Manager',
-];
+import SignUpScreen from './SignUpScreen';
 
 export default function LoginScreen() {
   const dispatch = useDispatch();
@@ -27,6 +21,7 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('password123'); // Pre-fill for dev
   const [error, setErrorLocal] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showSignUp, setShowSignUp] = useState(false);
 
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
@@ -50,6 +45,16 @@ export default function LoginScreen() {
       setLoading(false);
     }
   };
+
+  // Show sign-up screen if toggled
+  if (showSignUp) {
+    return (
+      <SignUpScreen
+        onSignUpSuccess={() => setShowSignUp(false)}
+        onBackToLogin={() => setShowSignUp(false)}
+      />
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -108,6 +113,15 @@ export default function LoginScreen() {
       </TouchableOpacity>
 
       <Text style={styles.devHint}>Demo: admin@example.com / password123</Text>
+
+      <TouchableOpacity
+        style={styles.signUpLink}
+        onPress={() => setShowSignUp(true)}
+        accessibilityLabel="Go to sign up"
+        accessibilityRole="button"
+      >
+        <Text style={styles.signUpLinkText}>Don&apos;t have an account? Sign Up</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -182,6 +196,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#999',
     marginTop: 16,
+    textAlign: 'center',
+  },
+  signUpLink: {
+    marginTop: 16,
+  },
+  signUpLinkText: {
+    color: '#007bff',
+    fontSize: 14,
     textAlign: 'center',
   },
 });

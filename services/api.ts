@@ -1,24 +1,13 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import * as SecureStore from 'expo-secure-store';
-import Constants from 'expo-constants';
 
 /**
  * API Client for fertilizer-stock-app backend.
  * Handles JWT token storage, refresh, and Bearer auth headers.
  */
 
-// Get Metro dev server host and use it for backend API
-const getApiBaseUrl = () => {
-  // In development, get the Metro bundler host IP
-  const debuggerHost = Constants.expoConfig?.hostUri?.split(':').shift();
-  if (debuggerHost) {
-    return `http://${debuggerHost}:5000/api`;
-  }
-  // Fallback to localhost
-  return 'http://localhost:5000/api';
-};
-
-const API_BASE_URL = getApiBaseUrl();
+// Production backend URL
+const API_BASE_URL = 'https://invess-backend.onrender.com/api';
 
 interface AuthResponse {
   token: string;
@@ -161,6 +150,19 @@ class ApiClient {
   async listRequests(): Promise<any[]> {
     try {
       const response = await this.client.get('/requests');
+      return response.data;
+    } catch (err) {
+      throw this.parseError(err);
+    }
+  }
+
+  /**
+   * GET /users
+   * Admin-only: list all users with their roles
+   */
+  async listUsers(): Promise<any[]> {
+    try {
+      const response = await this.client.get('/users');
       return response.data;
     } catch (err) {
       throw this.parseError(err);

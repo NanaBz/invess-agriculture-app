@@ -25,19 +25,23 @@ async function seed() {
   await warehouseOfficer.save();
   console.log('Seeded users');
 
-  const wh1 = new Warehouse({ name: 'Central Warehouse', stock: 1000 });
-  const wh2 = new Warehouse({ name: 'North Depot', stock: 500 });
+  const wh1 = new Warehouse({ name: 'Teachermante', stock: 0 });
+  const wh2 = new Warehouse({ name: 'Teikwame', stock: 0 });
+  const wh3 = new Warehouse({ name: 'Tamale', stock: 0 });
+  const wh4 = new Warehouse({ name: 'Tema', stock: 0 });
   await wh1.save();
   await wh2.save();
-  console.log('Seeded warehouses');
+  await wh3.save();
+  await wh4.save();
+  console.log('Seeded locations: Teachermante, Teikwame, Tamale, Tema');
 
   const req1 = new Request({ title: '100 bags for North', description: 'For next week distribution', createdBy: sales._id, status: 'Pending' });
   await req1.save();
-  console.log('Seeded a request');
+  console.log('Seeded a demo request');
 
   const inv1 = new Invoice({ warehouse: wh1._id, amount: 2500, status: 'Unpaid', details: 'Initial delivery invoice' });
   await inv1.save();
-  console.log('Seeded an invoice');
+  console.log('Seeded a demo invoice');
 
   await mongoose.disconnect();
   console.log('Done');
