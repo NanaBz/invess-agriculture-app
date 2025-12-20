@@ -17,8 +17,8 @@ import SignUpScreen from './SignUpScreen';
 
 export default function LoginScreen() {
   const dispatch = useDispatch();
-  const [email, setEmail] = useState('admin@example.com'); // Pre-fill for dev
-  const [password, setPassword] = useState('password123'); // Pre-fill for dev
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setErrorLocal] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
@@ -112,8 +112,6 @@ export default function LoginScreen() {
         )}
       </TouchableOpacity>
 
-      <Text style={styles.devHint}>Demo: admin@example.com / password123</Text>
-
       <TouchableOpacity
         style={styles.signUpLink}
         onPress={() => setShowSignUp(true)}
@@ -191,15 +189,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 18,
-  },
-  devHint: {
-    fontSize: 12,
-    color: '#999',
-    marginTop: 16,
-    textAlign: 'center',
-  },
-  signUpLink: {
-    marginTop: 16,
   },
   signUpLinkText: {
     color: '#007bff',
