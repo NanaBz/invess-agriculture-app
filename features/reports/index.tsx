@@ -10,7 +10,13 @@ export default function ReportsScreen() {
   const requests = useSelector((state: RootState) => state.requests.requests);
   const invoices = useSelector((state: RootState) => state.invoices.invoices);
 
-  const totalStock = Object.values(stock).reduce((a, b) => a + b, 0);
+  // Total stock across all warehouses in Metric Tons
+  // Rule: 4 bags of 25kg = 1 MT; 2 bags of 50kg = 1 MT
+  const totalStockMT = Object.values(stock).reduce((warehouseAcc, fertArray) => {
+    const warehouseTotal = fertArray.reduce((acc, f) => acc + f.quantity25kg / 4 + f.quantity50kg / 2, 0);
+    return warehouseAcc + warehouseTotal;
+  }, 0);
+
   const pendingRequests = requests.filter(r => r.status === 'Pending').length;
   const approvedRequests = requests.filter(r => r.status === 'Approved').length;
   const rejectedRequests = requests.filter(r => r.status === 'Rejected').length;
@@ -24,10 +30,10 @@ export default function ReportsScreen() {
         <View
           style={styles.card}
           accessible
-          accessibilityLabel={`Total stock: ${totalStock} bags`}
+          accessibilityLabel={`Total stock: ${totalStockMT.toFixed(2)} metric tons`}
           accessibilityRole="summary"
         >
-          <Text style={styles.cardTitle}>Total Stock</Text><Text style={styles.cardValue}>{totalStock} bags</Text>
+          <Text style={styles.cardTitle}>Total Stock</Text><Text style={styles.cardValue}>{totalStockMT.toFixed(2)} MT</Text>
         </View>
         <View
           style={styles.card}
