@@ -36,7 +36,7 @@ const roleTabs: Record<string, { name: string; component: any; icon: any }[]> = 
   'Warehouse Officer': [
     { name: 'Dashboard', component: DashboardScreen, icon: LucideHome },
     { name: 'Warehouse', component: WarehouseScreen, icon: LucideWarehouse },
-    { name: 'Invoices', component: InvoicesScreen, icon: LucideReceipt },
+    { name: 'Waybill', component: InvoicesScreen, icon: LucideReceipt },
     { name: 'Notifications', component: NotificationsScreen, icon: LucideBell },
     { name: 'Profile', component: ProfileScreen, icon: LucideUser },
   ],
@@ -45,7 +45,7 @@ const roleTabs: Record<string, { name: string; component: any; icon: any }[]> = 
     { name: 'Requests', component: RequestsScreen, icon: LucideFileText },
     { name: 'Approvals', component: ApprovalsScreen, icon: LucideCheckCircle },
     { name: 'Warehouse', component: WarehouseScreen, icon: LucideWarehouse },
-    { name: 'Invoices', component: InvoicesScreen, icon: LucideReceipt },
+    { name: 'Waybill', component: InvoicesScreen, icon: LucideReceipt },
     { name: 'Reports', component: ReportsScreen, icon: LucideBarChart },
     { name: 'Users', component: UsersScreen, icon: LucideUser },
     { name: 'Notifications', component: NotificationsScreen, icon: LucideBell },
@@ -95,7 +95,7 @@ export default function Tabs() {
               resizeMode="contain"
             />
             <View>
-              <Text style={{ fontWeight: 'bold', fontSize: 18, color: '#7ED957' }}>Invess Agriculture</Text>
+              <Text style={{ fontWeight: 'bold', fontSize: 18, color: '#7ED957' }}>Invess Agriculture LTD</Text>
               <Text style={{ fontSize: 14, color: '#222' }}>
                 {name ? `Welcome, ${name}!` : role ? `Welcome, ${role}!` : 'Welcome!'}
               </Text>

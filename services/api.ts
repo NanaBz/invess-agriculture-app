@@ -8,7 +8,13 @@ import { Platform } from 'react-native';
  */
 
 // Production backend URL
-const API_BASE_URL = 'https://invess-backend.onrender.com/api';
+// For local development, use http://localhost:5000/api or http://YOUR_IP:5000/api
+// For production, use https://invess-backend.onrender.com/api
+// Change 'localhost' to your computer's IP (e.g., 192.168.x.x) if testing on physical device
+const API_BASE_URL = __DEV__ ? 'http://localhost:5000/api' : 'https://invess-backend.onrender.com/api';
+
+// Debug: Log the API URL being used
+console.log('🔌 Using API Base URL:', API_BASE_URL, '| Dev Mode:', __DEV__);
 
 // Storage helper for web vs native
 const storage = {
@@ -134,15 +140,18 @@ class ApiClient {
    */
   async login(email: string, password: string): Promise<AuthResponse> {
     try {
+      console.log('📤 [FRONTEND] Sending login request to:', API_BASE_URL + '/auth/login');
       const response = await this.client.post<AuthResponse>('/auth/login', {
         email,
         password,
       });
+      console.log('✅ [FRONTEND] Login response received:', response.data);
       if (response.data.token) {
         await this.setToken(response.data.token);
       }
       return response.data;
     } catch (err) {
+      console.error('❌ [FRONTEND] Login request failed:', err);
       throw this.parseError(err);
     }
   }
@@ -357,6 +366,14 @@ class ApiClient {
     if (axios.isAxiosError(error)) {
       const data = error.response?.data as ApiError;
       const status = error.response?.status;
+
+      // No response (network / CORS / server down)
+      if (!error.response) {
+        if (error.code === 'ECONNABORTED') {
+          return new Error('Request timed out. Please try again.');
+        }
+        return new Error('Cannot reach server. Please check your connection and retry.');
+      }
 
       if (status === 400 && data?.errors && Array.isArray(data.errors)) {
         // Validation errors
