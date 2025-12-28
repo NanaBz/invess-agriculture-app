@@ -1,27 +1,76 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface StockMovement {
+export interface FertilizerStock {
+  fertilizer: string;
+  quantity25kg: number;
+  quantity50kg: number;
+}
+
+export interface StockMovement {
   id: string;
   type: 'intake' | 'release';
   warehouse: string;
+  fertilizer: string;
+  bagSize: '25kg' | '50kg';
   quantity: number;
   date: string;
   note?: string;
 }
 
+export interface AddStockPayload {
+  warehouse: string;
+  fertilizer: string;
+  bagSize: '25kg' | '50kg';
+  quantity: number;
+  note?: string;
+}
+
+export interface ReleaseStockPayload {
+  warehouse: string;
+  fertilizer: string;
+  bagSize: '25kg' | '50kg';
+  quantity: number;
+  note?: string;
+}
+
 interface WarehouseState {
-  stock: Record<string, number>; // warehouse name -> quantity
+  stock: Record<string, FertilizerStock[]>; // warehouse name -> array of fertilizer stocks
   movements: StockMovement[];
 }
 
+const FERTILIZERS = [
+  'NPK 23:10:05 gray/reddish',
+  'NPK 20:10:10 gray/reddish',
+  'NPK 15:15:15 gray/reddish',
+  'MOP',
+  'DAP',
+  'TSP',
+  'POTASSIUM NITRATE',
+  'CALCIUM NITRATE',
+  'COCOA FERTILIZER',
+  'UREA 46%',
+  'SULPHATE OF AMMONIA (CRYSTAL)',
+  'SULPHATE OF AMMONIA (GRANULAR)',
+  'KISERIATE',
+];
+
+const WAREHOUSES = ['Teachermante', 'Teikwame', 'Techiman', 'Tamale', 'Tema'];
+
+// Initialize each warehouse with all fertilizers at 0 quantity
+const initializeWarehouseStock = (): Record<string, FertilizerStock[]> => {
+  const stock: Record<string, FertilizerStock[]> = {};
+  WAREHOUSES.forEach(warehouse => {
+    stock[warehouse] = FERTILIZERS.map(fertilizer => ({
+      fertilizer,
+      quantity25kg: 0,
+      quantity50kg: 0,
+    }));
+  });
+  return stock;
+};
+
 const initialState: WarehouseState = {
-  stock: {
-  Teachermante: 120,
-  Teikwame: 80,
-  Techiman: 60,
-  Tamale: 40,
-  Tema: 30,
-  },
+  stock: initializeWarehouseStock(),
   movements: [],
 };
 
@@ -29,26 +78,60 @@ const warehouseSlice = createSlice({
   name: 'warehouse',
   initialState,
   reducers: {
-    addStock: (state, action: PayloadAction<{ warehouse: string; quantity: number; note?: string }>) => {
-      state.stock[action.payload.warehouse] = (state.stock[action.payload.warehouse] || 0) + action.payload.quantity;
+    addStock: (state, action: PayloadAction<AddStockPayload>) => {
+      const { warehouse, fertilizer, bagSize, quantity, note } = action.payload;
+      
+      if (!state.stock[warehouse]) {
+        state.stock[warehouse] = FERTILIZERS.map(f => ({
+          fertilizer: f,
+          quantity25kg: 0,
+          quantity50kg: 0,
+        }));
+      }
+      
+      const fertilizerStock = state.stock[warehouse].find(f => f.fertilizer === fertilizer);
+      if (fertilizerStock) {
+        if (bagSize === '25kg') {
+          fertilizerStock.quantity25kg += quantity;
+        } else {
+          fertilizerStock.quantity50kg += quantity;
+        }
+      }
+      
       state.movements.unshift({
         id: Date.now().toString(),
         type: 'intake',
-        warehouse: action.payload.warehouse,
-        quantity: action.payload.quantity,
+        warehouse,
+        fertilizer,
+        bagSize,
+        quantity,
         date: new Date().toISOString(),
-        note: action.payload.note,
+        note,
       });
     },
-    releaseStock: (state, action: PayloadAction<{ warehouse: string; quantity: number; note?: string }>) => {
-      state.stock[action.payload.warehouse] = Math.max(0, (state.stock[action.payload.warehouse] || 0) - action.payload.quantity);
+    releaseStock: (state, action: PayloadAction<ReleaseStockPayload>) => {
+      const { warehouse, fertilizer, bagSize, quantity, note } = action.payload;
+      
+      if (!state.stock[warehouse]) return;
+      
+      const fertilizerStock = state.stock[warehouse].find(f => f.fertilizer === fertilizer);
+      if (fertilizerStock) {
+        if (bagSize === '25kg') {
+          fertilizerStock.quantity25kg = Math.max(0, fertilizerStock.quantity25kg - quantity);
+        } else {
+          fertilizerStock.quantity50kg = Math.max(0, fertilizerStock.quantity50kg - quantity);
+        }
+      }
+      
       state.movements.unshift({
         id: Date.now().toString(),
         type: 'release',
-        warehouse: action.payload.warehouse,
-        quantity: action.payload.quantity,
+        warehouse,
+        fertilizer,
+        bagSize,
+        quantity,
         date: new Date().toISOString(),
-        note: action.payload.note,
+        note,
       });
     },
   },

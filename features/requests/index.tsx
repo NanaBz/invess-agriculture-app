@@ -15,7 +15,7 @@ export default function RequestsScreen() {
   const [selected, setSelected] = useState<any>(null);
 
   const handleCreate = () => setShowForm(true);
-  const handleSubmit = (data: { title: string; description: string }) => {
+  const handleSubmit = (data: any) => {
     dispatch(addRequest(data));
     setShowForm(false);
   };

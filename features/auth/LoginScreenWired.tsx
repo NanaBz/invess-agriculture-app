@@ -190,6 +190,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
   },
+  signUpLink: {
+    marginTop: 16,
+    paddingVertical: 8,
+  },
   signUpLinkText: {
     color: '#007bff',
     fontSize: 14,

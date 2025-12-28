@@ -1,10 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface Request {
+export interface RequestInput {
+  warehouse: string;
+  fertilizers: string[];
+  bagSize: '25kg' | '50kg';
+  quantity: number;
+  customerName: string;
+  customerPhone: string;
+}
+
+interface Request extends RequestInput {
   id: string;
-  title: string;
-  description: string;
-  status: string;
+  status: 'Pending' | 'Approved' | 'Rejected';
+  createdAt: string;
 }
 
 interface RequestsState {
@@ -12,22 +20,19 @@ interface RequestsState {
 }
 
 const initialState: RequestsState = {
-  requests: [
-  { id: '1', title: 'Fertilizer for Teachermante', description: 'Need 100 bags for Teachermante warehouse', status: 'Pending' },
-  { id: '2', title: 'Restock Teikwame', description: 'Requesting 50 bags for Teikwame', status: 'Approved' },
-  ],
+  requests: [],
 };
 
 const requestsSlice = createSlice({
   name: 'requests',
   initialState,
   reducers: {
-    addRequest: (state, action: PayloadAction<{ title: string; description: string }>) => {
+    addRequest: (state, action: PayloadAction<RequestInput>) => {
       const newRequest: Request = {
         id: Date.now().toString(),
-        title: action.payload.title,
-        description: action.payload.description,
+        ...action.payload,
         status: 'Pending',
+        createdAt: new Date().toISOString(),
       };
       state.requests.unshift(newRequest);
     },
