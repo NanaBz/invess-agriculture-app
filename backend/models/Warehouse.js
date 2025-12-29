@@ -5,4 +5,7 @@ const WarehouseSchema = new mongoose.Schema({
   stock: { type: Number, default: 0 },
 }, { timestamps: true });
 
+// Indexes for performance
+WarehouseSchema.index({ name: 1 });
+
 module.exports = mongoose.model('Warehouse', WarehouseSchema);

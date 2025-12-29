@@ -9,15 +9,15 @@ interface WarehouseDetailProps {
 }
 
 export default function WarehouseDetail({ warehouse, stock, onBack }: WarehouseDetailProps) {
-  // 4 bags of 25kg = 1 MT; 2 bags of 50kg = 1 MT
-  const toMetricTons = (qty25: number, qty50: number) => qty25 / 4 + qty50 / 2;
+  // 1kg * 100 = 1 MT; 4 bags of 25kg = 1 MT; 2 bags of 50kg = 1 MT
+  const toMetricTons = (qty1: number, qty25: number, qty50: number) => qty1 / 100 + qty25 / 4 + qty50 / 2;
 
   const calculateTotal = (fertilizer: FertilizerStock) => {
-    return toMetricTons(fertilizer.quantity25kg, fertilizer.quantity50kg).toFixed(2);
+    return toMetricTons(fertilizer.quantity1kg, fertilizer.quantity25kg, fertilizer.quantity50kg).toFixed(2);
   };
 
   const getTotalStock = () => {
-    const total = stock.reduce((acc, f) => acc + toMetricTons(f.quantity25kg, f.quantity50kg), 0);
+    const total = stock.reduce((acc, f) => acc + toMetricTons(f.quantity1kg, f.quantity25kg, f.quantity50kg), 0);
     return total.toFixed(2);
   };
 
@@ -37,7 +37,7 @@ export default function WarehouseDetail({ warehouse, stock, onBack }: WarehouseD
 
       <ScrollView style={styles.scrollView}>
         {stock.map((fertilizer, index) => {
-          const hasStock = fertilizer.quantity25kg > 0 || fertilizer.quantity50kg > 0;
+          const hasStock = fertilizer.quantity1kg > 0 || fertilizer.quantity25kg > 0 || fertilizer.quantity50kg > 0;
           const metricTons = calculateTotal(fertilizer);
           
           return (
@@ -49,8 +49,12 @@ export default function WarehouseDetail({ warehouse, stock, onBack }: WarehouseD
               ]}
             >
               <Text style={styles.fertilizerName}>{fertilizer.fertilizer}</Text>
-              
               <View style={styles.quantityRow}>
+                <View style={styles.quantityItem}>
+                  <Text style={styles.quantityLabel}>1kg bags</Text>
+                  <Text style={styles.quantityValue}>{fertilizer.quantity1kg}</Text>
+                </View>
+                <View style={styles.divider} />
                 <View style={styles.quantityItem}>
                   <Text style={styles.quantityLabel}>25kg bags</Text>
                   <Text style={styles.quantityValue}>{fertilizer.quantity25kg}</Text>
@@ -61,7 +65,6 @@ export default function WarehouseDetail({ warehouse, stock, onBack }: WarehouseD
                   <Text style={styles.quantityValue}>{fertilizer.quantity50kg}</Text>
                 </View>
               </View>
-              
               <View style={styles.totalRow}>
                 <Text style={styles.totalMetric}>Total: {metricTons} MT</Text>
               </View>

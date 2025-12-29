@@ -37,3 +37,5 @@ const styles = StyleSheet.create({
   date: { color: '#fff', fontSize: 12, marginTop: 2 },
   empty: { color: '#888', textAlign: 'center', marginTop: 32 },
 });
+// Invoice feature removed. Use Waybill feature instead.
+// (No export needed, file is deprecated)

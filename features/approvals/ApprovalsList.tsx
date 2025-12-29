@@ -4,10 +4,10 @@ import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native
 // Helper function to generate description
 const generateShortDescription = (request: any) => {
   const fertCount = request.fertilizers?.length || 0;
-  const metricTons = request.bagSize === '50kg' 
-    ? (request.quantity / 2).toFixed(2) 
-    : (request.quantity / 4).toFixed(2);
-  
+  let metricTons = '0.00';
+  if (request.bagSize === '50kg') metricTons = (request.quantity / 2).toFixed(2);
+  else if (request.bagSize === '25kg') metricTons = (request.quantity / 4).toFixed(2);
+  else if (request.bagSize === '1kg') metricTons = (request.quantity / 1000).toFixed(2);
   return `${fertCount} fertilizer${fertCount !== 1 ? 's' : ''} • ${request.quantity} bags (${request.bagSize}) • ${metricTons} MT`;
 };
 

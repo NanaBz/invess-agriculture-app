@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Modal, TouchableOpacity, Text, StyleSheet, ScrollView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
@@ -8,6 +8,7 @@ import WarehouseDetail from './WarehouseDetail';
 import StockMovementList from './StockMovementList';
 import StockForm from './StockForm';
 import { addStock, releaseStock } from '../../store/warehouseSlice';
+
 
 export default function WarehouseScreen() {
   const stock = useSelector((state: RootState) => state.warehouse.stock);
@@ -27,6 +28,14 @@ export default function WarehouseScreen() {
   const handleSelectWarehouse = (warehouse: string) => setSelectedWarehouse(warehouse);
   const handleBackToList = () => setSelectedWarehouse(null);
   const warehouses = Object.keys(stock);
+
+  // Polling for live updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // dispatch(fetchWarehouses()) or trigger a refetch here
+    }, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   if (selectedWarehouse) {
     return (

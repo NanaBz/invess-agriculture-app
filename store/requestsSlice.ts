@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export interface RequestInput {
   warehouse: string;
   fertilizers: string[];
-  bagSize: '25kg' | '50kg';
+  bagSize: '1kg' | '25kg' | '50kg';
   quantity: number;
   customerName: string;
   customerPhone: string;

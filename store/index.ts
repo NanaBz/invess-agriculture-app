@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import userReducer from './userSlice';
 import requestsReducer from './requestsSlice';
 import warehouseReducer from './warehouseSlice';
-import invoicesReducer from './invoicesSlice';
+import waybillsReducer from './waybillsSlice';
 import notificationsReducer from './notificationsSlice';
 
 const store = configureStore({
@@ -10,7 +10,7 @@ const store = configureStore({
     user: userReducer,
     requests: requestsReducer,
     warehouse: warehouseReducer,
-    invoices: invoicesReducer,
+    waybills: waybillsReducer,
     notifications: notificationsReducer,
   },
 });

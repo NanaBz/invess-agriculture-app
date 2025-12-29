@@ -1,23 +1,21 @@
 
+import React, { useMemo, useEffect } from 'react';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import DashboardScreen from '../../features/dashboard';
 import RequestsScreen from '../../features/requests';
 import ApprovalsScreen from '../../features/approvals';
 import WarehouseScreen from '../../features/warehouse';
-import InvoicesScreen from '../../features/invoices';
+import WaybillScreen from '../../features/waybill';
 import ReportsScreen from '../../features/reports';
 import NotificationsScreen from '../../features/notifications';
-import { LucideHome, LucideFileText, LucideCheckCircle, LucideWarehouse, LucideReceipt, LucideBarChart, LucideBell, LucideUser } from '../../components/Icon';
 import ProfileScreen from '../../features/profile/ProfileScreen';
 import UsersScreen from '../../features/profile/UsersScreen';
-
+import { LucideHome, LucideFileText, LucideCheckCircle, LucideWarehouse, LucideReceipt, LucideBarChart, LucideBell, LucideUser } from '../../components/Icon';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
 import { logout } from '../../store/userSlice';
 import { useRouter } from 'expo-router';
-import { Text, TouchableOpacity, View, Image } from 'react-native';
-import { useEffect } from 'react';
-
 const Tab = createBottomTabNavigator();
 
 const roleTabs: Record<string, { name: string; component: any; icon: any }[]> = {
@@ -36,7 +34,7 @@ const roleTabs: Record<string, { name: string; component: any; icon: any }[]> = 
   'Warehouse Officer': [
     { name: 'Dashboard', component: DashboardScreen, icon: LucideHome },
     { name: 'Warehouse', component: WarehouseScreen, icon: LucideWarehouse },
-    { name: 'Waybill', component: InvoicesScreen, icon: LucideReceipt },
+    { name: 'Waybill', component: WaybillScreen, icon: LucideReceipt },
     { name: 'Notifications', component: NotificationsScreen, icon: LucideBell },
     { name: 'Profile', component: ProfileScreen, icon: LucideUser },
   ],
@@ -45,7 +43,7 @@ const roleTabs: Record<string, { name: string; component: any; icon: any }[]> = 
     { name: 'Requests', component: RequestsScreen, icon: LucideFileText },
     { name: 'Approvals', component: ApprovalsScreen, icon: LucideCheckCircle },
     { name: 'Warehouse', component: WarehouseScreen, icon: LucideWarehouse },
-    { name: 'Waybill', component: InvoicesScreen, icon: LucideReceipt },
+    { name: 'Waybill', component: WaybillScreen, icon: LucideReceipt },
     { name: 'Reports', component: ReportsScreen, icon: LucideBarChart },
     { name: 'Users', component: UsersScreen, icon: LucideUser },
     { name: 'Notifications', component: NotificationsScreen, icon: LucideBell },
@@ -60,6 +58,8 @@ export default function Tabs() {
   const tabs = role ? roleTabs[role] : [];
   const dispatch = useDispatch();
   const router = useRouter();
+  const notifications = useSelector((state: RootState) => state.notifications.notifications);
+  const unreadCount = useMemo(() => notifications.filter(n => !n.read).length, [notifications]);
 
   useEffect(() => {
     if (!role) {
@@ -122,7 +122,28 @@ export default function Tabs() {
           name={name}
           component={component}
           options={{
-            tabBarIcon: ({ color, size }: { color: string; size: number }) => <Icon color={color} size={size} />,
+            tabBarIcon: ({ color, size }: { color: string; size: number }) =>
+              name === 'Notifications' && unreadCount > 0 ? (
+                <View>
+                  <Icon color={color} size={size} />
+                  <View style={{
+                    position: 'absolute',
+                    top: -4,
+                    right: -8,
+                    backgroundColor: 'red',
+                    borderRadius: 8,
+                    minWidth: 16,
+                    height: 16,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingHorizontal: 4,
+                  }}>
+                    <Text style={{ color: '#fff', fontSize: 10, fontWeight: 'bold' }}>{unreadCount}</Text>
+                  </View>
+                </View>
+              ) : (
+                <Icon color={color} size={size} />
+              ),
           }}
         />
       ))}

@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface FertilizerStock {
   fertilizer: string;
+  quantity1kg: number;
   quantity25kg: number;
   quantity50kg: number;
 }
@@ -11,7 +12,7 @@ export interface StockMovement {
   type: 'intake' | 'release';
   warehouse: string;
   fertilizer: string;
-  bagSize: '25kg' | '50kg';
+  bagSize: '1kg' | '25kg' | '50kg';
   quantity: number;
   date: string;
   note?: string;
@@ -20,7 +21,7 @@ export interface StockMovement {
 export interface AddStockPayload {
   warehouse: string;
   fertilizer: string;
-  bagSize: '25kg' | '50kg';
+  bagSize: '1kg' | '25kg' | '50kg';
   quantity: number;
   note?: string;
 }
@@ -28,7 +29,7 @@ export interface AddStockPayload {
 export interface ReleaseStockPayload {
   warehouse: string;
   fertilizer: string;
-  bagSize: '25kg' | '50kg';
+  bagSize: '1kg' | '25kg' | '50kg';
   quantity: number;
   note?: string;
 }
@@ -62,6 +63,7 @@ const initializeWarehouseStock = (): Record<string, FertilizerStock[]> => {
   WAREHOUSES.forEach(warehouse => {
     stock[warehouse] = FERTILIZERS.map(fertilizer => ({
       fertilizer,
+      quantity1kg: 0,
       quantity25kg: 0,
       quantity50kg: 0,
     }));
@@ -84,6 +86,7 @@ const warehouseSlice = createSlice({
       if (!state.stock[warehouse]) {
         state.stock[warehouse] = FERTILIZERS.map(f => ({
           fertilizer: f,
+          quantity1kg: 0,
           quantity25kg: 0,
           quantity50kg: 0,
         }));
@@ -91,7 +94,9 @@ const warehouseSlice = createSlice({
       
       const fertilizerStock = state.stock[warehouse].find(f => f.fertilizer === fertilizer);
       if (fertilizerStock) {
-        if (bagSize === '25kg') {
+        if (bagSize === '1kg') {
+          fertilizerStock.quantity1kg += quantity;
+        } else if (bagSize === '25kg') {
           fertilizerStock.quantity25kg += quantity;
         } else {
           fertilizerStock.quantity50kg += quantity;
@@ -116,7 +121,9 @@ const warehouseSlice = createSlice({
       
       const fertilizerStock = state.stock[warehouse].find(f => f.fertilizer === fertilizer);
       if (fertilizerStock) {
-        if (bagSize === '25kg') {
+        if (bagSize === '1kg') {
+          fertilizerStock.quantity1kg = Math.max(0, fertilizerStock.quantity1kg - quantity);
+        } else if (bagSize === '25kg') {
           fertilizerStock.quantity25kg = Math.max(0, fertilizerStock.quantity25kg - quantity);
         } else {
           fertilizerStock.quantity50kg = Math.max(0, fertilizerStock.quantity50kg - quantity);

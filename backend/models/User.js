@@ -10,6 +10,7 @@ const UserSchema = new mongoose.Schema({
     enum: ['Sales Agent', 'Compliance Officer', 'Warehouse Officer', 'Admin/Manager'],
     default: 'Sales Agent',
   },
+  pushToken: { type: String },
 }, { timestamps: true });
 
 UserSchema.pre('save', async function (next) {

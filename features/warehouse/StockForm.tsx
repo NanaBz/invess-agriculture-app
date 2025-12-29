@@ -18,7 +18,7 @@ const FERTILIZERS = [
   'KISERIATE',
 ];
 
-const BAG_SIZES: ('25kg' | '50kg')[] = ['25kg', '50kg'];
+const BAG_SIZES: ('1kg' | '25kg' | '50kg')[] = ['1kg', '25kg', '50kg'];
 
 interface StockFormProps {
   warehouses: string[];
@@ -31,7 +31,7 @@ interface StockFormProps {
 export default function StockForm({ warehouses, warehouseStock, onSubmit, onCancel, type }: StockFormProps) {
   const [warehouse, setWarehouse] = useState(warehouses[0] || '');
   const [fertilizer, setFertilizer] = useState('');
-  const [bagSize, setBagSize] = useState<'25kg' | '50kg'>('50kg');
+  const [bagSize, setBagSize] = useState<'1kg' | '25kg' | '50kg'>('50kg');
   const [quantity, setQuantity] = useState('');
   const [note, setNote] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +42,9 @@ export default function StockForm({ warehouses, warehouseStock, onSubmit, onCanc
     if (!stock) return 0;
     const fertilizerStock = stock.find(f => f.fertilizer === fertilizer);
     if (!fertilizerStock) return 0;
-    return bagSize === '25kg' ? fertilizerStock.quantity25kg : fertilizerStock.quantity50kg;
+    if (bagSize === '1kg') return fertilizerStock.quantity1kg;
+    if (bagSize === '25kg') return fertilizerStock.quantity25kg;
+    return fertilizerStock.quantity50kg;
   };
 
   const handleSubmit = () => {

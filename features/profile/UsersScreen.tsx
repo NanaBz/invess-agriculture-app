@@ -29,7 +29,7 @@ export default function UsersScreen() {
   const [error, setError] = useState<string | null>(null);
 
   // Check if user is admin
-  const isAdmin = user?.role === 'Admin/Manager' || user?.role === 'Admin';
+  const isAdmin = user?.role === 'Admin/Manager';
 
   const fetchUsers = async () => {
     if (!isAdmin) {
@@ -82,6 +82,23 @@ export default function UsersScreen() {
     );
   }
 
+  const handleDeleteUser = async (id: string) => {
+    Alert.alert('Delete User', 'Are you sure you want to delete this user?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete', style: 'destructive', onPress: async () => {
+          try {
+            await apiClient.deleteUser(id);
+            setUsers(users.filter(u => u._id !== id));
+            Alert.alert('Success', 'User deleted successfully.');
+          } catch (err: any) {
+            Alert.alert('Error', getErrorMessage(err));
+          }
+        }
+      }
+    ]);
+  };
+
   const renderUserItem = ({ item }: { item: User }) => (
     <View style={styles.userCard}>
       <Text style={styles.userName}>{item.name}</Text>
@@ -94,6 +111,12 @@ export default function UsersScreen() {
         <Text style={styles.createdAt}>
           Created: {new Date(item.createdAt).toLocaleDateString()}
         </Text>
+      )}
+      {isAdmin && user && (user as any)._id !== item._id && (
+        <Text
+          style={styles.deleteBtn}
+          onPress={() => handleDeleteUser(item._id)}
+        >Delete</Text>
       )}
     </View>
   );
@@ -246,5 +269,15 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 16,
     color: '#999',
+  },
+  deleteBtn: {
+    color: '#d32f2f',
+    fontWeight: 'bold',
+    marginTop: 8,
+    alignSelf: 'flex-end',
+    fontSize: 14,
+    padding: 6,
+    backgroundColor: '#ffebee',
+    borderRadius: 4,
   },
 });

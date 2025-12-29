@@ -7,7 +7,7 @@ type NotificationType = 'info' | 'warning' | 'success';
 
 
 
-export default function NotificationsList({ notifications, onSelect, onMarkAllRead }: any) {
+export default function NotificationsList({ notifications, onSelect, onMarkAllRead, onClear }: any) {
 const typeStyleMap: Record<NotificationType, any> = {
   info: styles.info,
   warning: styles.warning,
@@ -27,17 +27,26 @@ const typeStyleMap: Record<NotificationType, any> = {
         data={notifications}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={[styles.item, !item.read && styles.unread]}
-            onPress={() => onSelect(item)}
-            accessibilityLabel={`Notification: ${item.title}. ${item.message}. ${item.read ? 'Read' : 'Unread'}`}
-            accessibilityRole="button"
-            accessibilityState={{ selected: !item.read }}
-          >
-            <Text style={styles.title}>{item.title}</Text>
-            <Text style={[styles.message, typeStyleMap[item.type as NotificationType] || styles.info]}>{item.message}</Text>
-            <Text style={styles.date}>{new Date(item.date).toLocaleString()}</Text>
-          </TouchableOpacity>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <TouchableOpacity
+              style={[styles.item, !item.read && styles.unread, { flex: 1 }]}
+              onPress={() => onSelect(item)}
+              accessibilityLabel={`Notification: ${item.title}. ${item.message}. ${item.read ? 'Read' : 'Unread'}`}
+              accessibilityRole="button"
+              accessibilityState={{ selected: !item.read }}
+            >
+              <Text style={styles.title}>{item.title}</Text>
+              <Text style={[styles.message, typeStyleMap[item.type as NotificationType] || styles.info]}>{item.message}</Text>
+              <Text style={styles.date}>{new Date(item.date).toLocaleString()}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => onClear(item.id)}
+              style={{ marginLeft: 8, padding: 6, backgroundColor: '#ffdddd', borderRadius: 6 }}
+              accessibilityLabel="Clear notification"
+            >
+              <Text style={{ color: 'red', fontWeight: 'bold', fontSize: 12 }}>Clear</Text>
+            </TouchableOpacity>
+          </View>
         )}
         ListEmptyComponent={<Text style={styles.empty}>No notifications.</Text>}
       />

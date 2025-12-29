@@ -1,4 +1,6 @@
-import axios, { AxiosInstance, AxiosError } from 'axios';
+// (Removed misplaced deleteUser method)
+
+import axios, { AxiosInstance, AxiosError, isAxiosError } from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 
@@ -58,13 +60,26 @@ interface ApiError {
 }
 
 class ApiClient {
+    /**
+     * DELETE /users/:id
+     * Admin-only: delete a user
+     */
+    async deleteUser(id: string): Promise<any> {
+      try {
+        const response = await this.client.delete(`/users/${id}`);
+        return response.data;
+      } catch (err) {
+        throw this.parseError(err);
+      }
+    }
   private client: AxiosInstance;
   private token: string | null = null;
+  private static TIMEOUT_ERROR_MESSAGE = 'The request timed out. Please check your internet connection or try again later.';
 
   constructor() {
     this.client = axios.create({
       baseURL: API_BASE_URL,
-      timeout: 10000,
+      timeout: 30000, // Increased timeout to 30 seconds
     });
 
     // Add Bearer token to requests
@@ -83,6 +98,13 @@ class ApiClient {
     this.client.interceptors.response.use(
       (response) => response,
       async (error: AxiosError<ApiError>) => {
+        if (error.code === 'ECONNABORTED') {
+          // Timeout error
+          return Promise.reject({
+            message: ApiClient.TIMEOUT_ERROR_MESSAGE,
+            code: 'TIMEOUT',
+          });
+        }
         if (error.response?.status === 401) {
           // Token is invalid; clear it
           await this.clearToken();
@@ -363,7 +385,7 @@ class ApiClient {
    * Parse error responses into user-friendly messages.
    */
   private parseError(error: unknown): Error {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       const data = error.response?.data as ApiError;
       const status = error.response?.status;
 

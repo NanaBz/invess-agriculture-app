@@ -79,3 +79,5 @@ const styles = StyleSheet.create({
   action: { backgroundColor: '#7ED957', borderRadius: 6, paddingHorizontal: 16, paddingVertical: 8, alignSelf: 'flex-start' },
   actionText: { color: '#fff', fontWeight: 'bold' },
 });
+// Invoice feature removed. Use Waybill feature instead.
+// Deprecated: InvoiceDetail. This file should not export anything.

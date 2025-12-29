@@ -26,12 +26,12 @@ const WAREHOUSES = [
   'Tema',
 ];
 
-const BAG_SIZES: ('25kg' | '50kg')[] = ['25kg', '50kg'];
+const BAG_SIZES: ('1kg' | '25kg' | '50kg')[] = ['1kg', '25kg', '50kg'];
 
 export default function RequestForm({ onSubmit, onCancel }: any) {
   const [warehouse, setWarehouse] = useState('');
   const [selectedFertilizers, setSelectedFertilizers] = useState<string[]>([]);
-  const [bagSize, setBagSize] = useState<'25kg' | '50kg'>('50kg');
+  const [bagSize, setBagSize] = useState<'1kg' | '25kg' | '50kg'>('50kg');
   const [quantity, setQuantity] = useState('');
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');

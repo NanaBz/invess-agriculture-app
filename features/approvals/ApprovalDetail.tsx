@@ -5,9 +5,10 @@ export default function ApprovalDetail({ request, onBack, onApprove, onReject }:
   if (!request) return null;
   
   // Calculate metric tons
-  const metricTons = request.bagSize === '50kg' 
-    ? (request.quantity / 2).toFixed(2) 
-    : (request.quantity / 4).toFixed(2);
+  let metricTons = '0.00';
+  if (request.bagSize === '50kg') metricTons = (request.quantity / 2).toFixed(2);
+  else if (request.bagSize === '25kg') metricTons = (request.quantity / 4).toFixed(2);
+  else if (request.bagSize === '1kg') metricTons = (request.quantity / 1000).toFixed(2);
 
   return (
     <ScrollView style={styles.container}>

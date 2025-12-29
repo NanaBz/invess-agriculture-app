@@ -22,6 +22,7 @@ app.use('/api/requests', require('./routes/requests'));
 app.use('/api/warehouses', require('./routes/warehouses'));
 app.use('/api/invoices', require('./routes/invoices'));
 app.use('/api/notifications', require('./routes/notifications'));
+app.use('/api/waybills', require('./routes/waybills'));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => console.log(`Server started on port ${PORT} (listening on all interfaces)`));

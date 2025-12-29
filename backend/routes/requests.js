@@ -45,6 +45,29 @@ router.post(
       const { title, description } = req.body;
       const newReq = new Request({ title, description, createdBy: req.user.id, status: 'Pending' });
       await newReq.save();
+
+      // Send push notification to all users with pushToken
+      const User = require('../models/User');
+
+      // Send push notifications in background
+      setImmediate(async () => {
+        try {
+          const sendPushNotification = require('../utils/sendPushNotification');
+          const users = await User.find({ pushToken: { $exists: true, $ne: null } });
+          const promises = users.map(u =>
+            sendPushNotification(
+              u.pushToken,
+              'New Request',
+              `${req.user.name} created a new request: ${title}`,
+              { requestId: newReq._id }
+            )
+          );
+          await Promise.all(promises);
+        } catch (e) {
+          console.error('Push notification error:', e);
+        }
+      });
+
       res.status(201).json(newReq);
     } catch (err) {
       res.status(500).json({ message: 'Server error' });

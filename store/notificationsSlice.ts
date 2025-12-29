@@ -14,17 +14,22 @@ interface NotificationsState {
 }
 
 const initialState: NotificationsState = {
-  notifications: [
-  // Removed Sunyani warehouse notification
-  { id: '2', title: 'Request Approved', message: 'Your request for Teachermante has been approved.', date: '2025-08-18T15:30:00Z', read: false, type: 'success' },
-  { id: '3', title: 'Invoice Due', message: 'Invoice for Teikwame warehouse is due.', date: '2025-08-17T12:00:00Z', read: true, type: 'info' },
-  ],
+  notifications: [], // Only real notifications from app events
 };
 
 const notificationsSlice = createSlice({
   name: 'notifications',
   initialState,
   reducers: {
+    addNotification: (state, action: PayloadAction<Omit<Notification, 'id' | 'date' | 'read'>>) => {
+      const newNotif: Notification = {
+        ...action.payload,
+        id: Date.now().toString(),
+        date: new Date().toISOString(),
+        read: false,
+      };
+      state.notifications.unshift(newNotif);
+    },
     markRead: (state, action: PayloadAction<string>) => {
       const notif = state.notifications.find(n => n.id === action.payload);
       if (notif) notif.read = true;
@@ -32,8 +37,11 @@ const notificationsSlice = createSlice({
     markAllRead: (state) => {
       state.notifications.forEach(n => n.read = true);
     },
+    removeNotification: (state, action: PayloadAction<string>) => {
+      state.notifications = state.notifications.filter(n => n.id !== action.payload);
+    },
   },
 });
 
-export const { markRead, markAllRead } = notificationsSlice.actions;
+export const { addNotification, markRead, markAllRead, removeNotification } = notificationsSlice.actions;
 export default notificationsSlice.reducer;

@@ -11,4 +11,10 @@ const RequestSchema = new mongoose.Schema({
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 }, { timestamps: true });
 
+// Indexes for performance
+RequestSchema.index({ createdBy: 1 });
+RequestSchema.index({ status: 1 });
+RequestSchema.index({ warehouse: 1 });
+RequestSchema.index({ createdAt: -1 });
+
 module.exports = mongoose.model('Request', RequestSchema);

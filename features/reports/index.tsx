@@ -8,7 +8,7 @@ export default function ReportsScreen() {
   const stock = useSelector((state: RootState) => state.warehouse.stock);
   const movements = useSelector((state: RootState) => state.warehouse.movements);
   const requests = useSelector((state: RootState) => state.requests.requests);
-  const invoices = useSelector((state: RootState) => state.invoices.invoices);
+  const waybills = useSelector((state: RootState) => state.waybills.waybills);
 
   // Total stock across all warehouses in Metric Tons
   // Rule: 4 bags of 25kg = 1 MT; 2 bags of 50kg = 1 MT
@@ -20,8 +20,9 @@ export default function ReportsScreen() {
   const pendingRequests = requests.filter(r => r.status === 'Pending').length;
   const approvedRequests = requests.filter(r => r.status === 'Approved').length;
   const rejectedRequests = requests.filter(r => r.status === 'Rejected').length;
-  const paidInvoices = invoices.filter(i => i.status === 'Paid').length;
-  const unpaidInvoices = invoices.filter(i => i.status === 'Unpaid').length;
+  const deliveredWaybills = waybills.filter(w => w.status === 'Delivered').length;
+  const inTransitWaybills = waybills.filter(w => w.status === 'In Transit').length;
+  const cancelledWaybills = waybills.filter(w => w.status === 'Cancelled').length;
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -66,18 +67,26 @@ export default function ReportsScreen() {
         <View
           style={styles.card}
           accessible
-          accessibilityLabel={`Paid invoices: ${paidInvoices}`}
+          accessibilityLabel={`Delivered waybills: ${deliveredWaybills}`}
           accessibilityRole="summary"
         >
-          <Text style={styles.cardTitle}>Paid Invoices</Text><Text style={styles.cardValue}>{paidInvoices}</Text>
+          <Text style={styles.cardTitle}>Delivered Waybills</Text><Text style={styles.cardValue}>{deliveredWaybills}</Text>
         </View>
         <View
           style={styles.card}
           accessible
-          accessibilityLabel={`Unpaid invoices: ${unpaidInvoices}`}
+          accessibilityLabel={`In Transit waybills: ${inTransitWaybills}`}
           accessibilityRole="summary"
         >
-          <Text style={styles.cardTitle}>Unpaid Invoices</Text><Text style={styles.cardValue}>{unpaidInvoices}</Text>
+          <Text style={styles.cardTitle}>In Transit Waybills</Text><Text style={styles.cardValue}>{inTransitWaybills}</Text>
+        </View>
+        <View
+          style={styles.card}
+          accessible
+          accessibilityLabel={`Cancelled waybills: ${cancelledWaybills}`}
+          accessibilityRole="summary"
+        >
+          <Text style={styles.cardTitle}>Cancelled Waybills</Text><Text style={styles.cardValue}>{cancelledWaybills}</Text>
         </View>
       </View>
       <Text style={[styles.header, { marginTop: 24 }]}>Recent Stock Movements</Text>
