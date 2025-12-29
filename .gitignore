@@ -1,3 +1,19 @@
+# Ignore all env and secret files in all folders
+*.env
+*.env.*
+**/.env
+**/.env.*
+**/config.js
+**/config.ts
+**/secrets.*
+**/private.*
+**/firebase.*
+**/aws-exports.js
+**/aws-exports.ts
+**/google-services.json
+**/GoogleService-Info.plist
+# Ignore backend environment variables
+backend/.env
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
 # dependencies
