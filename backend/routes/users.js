@@ -1,3 +1,12 @@
+
+const express = require('express');
+const router = express.Router();
+const User = require('../models/User'); // adjust path to your model file if needed
+const { authMiddleware, requireRole } = require('../middleware/auth');
+
+// Protect all /api/users routes by default
+router.use(authMiddleware);
+
 /**
  * DELETE /api/users/:id
  * Admin-only: delete a user
@@ -11,6 +20,7 @@ router.delete('/:id', requireRole(['Admin/Manager', 'Admin']), async (req, res) 
     res.status(500).json({ message: 'Server error' });
   }
 });
+
 /**
  * POST /api/users/push-token
  * Save Expo push token for a user
@@ -28,13 +38,6 @@ router.post('/push-token', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
-const express = require('express');
-const router = express.Router();
-const User = require('../models/User'); // adjust path to your model file if needed
-const { authMiddleware, requireRole } = require('../middleware/auth');
-
-// Protect all /api/users routes by default
-router.use(authMiddleware);
 
 /**
  * GET /api/users
